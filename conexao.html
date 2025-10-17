@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Compartilhe sua jornada e conecte-se conosco">
+    <title>Conexão - Filhos do Quarto</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+<body data-theme="light">
+    
+     
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <div class="brand-icon">
+                    <i class="bi bi-book"></i>
+                </div>
+                <span class="ms-2">Auto Conhecimento</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Temas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="a-jornada.html">A Jornada</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="o-quarto.html">O Quarto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="descubra-se.html">Descubra-se</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="conexao.html">Conexão</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="sobre-projeto.html">Desenvolvedores</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <button class="btn btn-icon" id="themeToggle" aria-label="Alternar modo escuro">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+      
+    <section class="page-header">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <h1 class="page-title mb-4">Conexão</h1>
+                    <p class="page-subtitle">
+                        Compartilhe sua jornada e conecte-se com outros viajantes do autoconhecimento
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+      
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    
+                    <div class="contact-intro text-center mb-5" data-aos="fade-up">
+                        <p class="lead">
+                            Sua jornada é única, mas você não precisa percorrê-la sozinho. Compartilhe suas reflexões, dúvidas ou descobertas conosco.
+                        </p>
+                    </div>
+
+                    <div class="contact-form-container" data-aos="fade-up">
+                        <form id="contactForm" class="contact-form">
+                            
+                            <div class="mb-4">
+                                <label for="name" class="form-label">Seu Nome</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                <div class="invalid-feedback">Por favor, insira seu nome.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="email" class="form-label">Seu E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="stage" class="form-label">Em qual etapa você se identifica?</label>
+                                <select class="form-select" id="stage" name="stage" required>
+                                    <option value="">Selecione uma etapa</option>
+                                    <option value="despertar">O Despertar</option>
+                                    <option value="confronto">O Confronto</option>
+                                    <option value="integracao">A Integração</option>
+                                    <option value="renascimento">O Renascimento</option>
+                                    <option value="nao-sei">Ainda não sei</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor, selecione uma etapa.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="message" class="form-label">Sua Mensagem</label>
+                                <textarea class="form-control" id="message" name="message" rows="6" required placeholder="Compartilhe suas reflexões, dúvidas ou descobertas..."></textarea>
+                                <div class="invalid-feedback">Por favor, escreva sua mensagem.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
+                                    <label class="form-check-label" for="newsletter">
+                                        Quero receber reflexões e conteúdos sobre autoconhecimento
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Enviar Mensagem
+                                    <i class="bi bi-send ms-2"></i>
+                                </button>
+                            </div>
+
+                        </form>
+
+                         
+                        <div id="successMessage" class="alert alert-success mt-4" style="display: none;">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Mensagem enviada com sucesso! Obrigado por compartilhar sua jornada conosco.
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+      
+    <section class="community-section py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center text-center mb-5">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <h2 class="section-title mb-4">Junte-se à Comunidade</h2>
+                    <p class="section-subtitle">
+                        Conecte-se com outros leitores e compartilhe insights sobre a jornada de autoconhecimento
+                    </p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="community-card text-center">
+                        <div class="community-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h4 class="community-title">Grupo de Discussão</h4>
+                        <p class="community-description">
+                            Participe de conversas profundas sobre autoconhecimento e transformação pessoal
+                        </p>
+                        <a href="#" class="btn btn-outline-primary">Participar</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="community-card text-center">
+                        <div class="community-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <h4 class="community-title">Eventos Online</h4>
+                        <p class="community-description">
+                            Workshops, palestras e círculos de reflexão sobre os temas do livro
+                        </p>
+                        <a href="#" class="btn btn-outline-primary">Ver Agenda</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="community-card text-center">
+                        <div class="community-icon">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <h4 class="community-title">Blog & Artigos</h4>
+                        <p class="community-description">
+                            Leia reflexões, análises e histórias de outros viajantes da jornada interior
+                        </p>
+                        <a href="#" class="btn btn-outline-primary">Ler Mais</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+      
+    <section class="quote-section py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center" data-aos="zoom-in">
+                    <blockquote class="featured-quote">
+                        <i class="bi bi-quote quote-mark"></i>
+                        <p class="quote-text-large">
+                            "Nenhuma jornada de autoconhecimento é solitária. Cada história compartilhada ilumina o caminho de outro viajante."
+                        </p>
+                        <cite class="quote-cite">— Filhos do Quarto</cite>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="footer-brand mb-3">
+                        <i class="bi bi-book me-2"></i>
+                        <span>Filhos do Quarto</span>
+                    </div>
+                    <p class="footer-text">
+                        Uma jornada literária de autoconhecimento e transformação pessoal.
+                    </p>
+                </div>
+                
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="footer-title mb-3">Navegação</h5>
+                    <ul class="footer-links">
+                        <li><a href="index.html">O Chamado</a></li>
+                        <li><a href="o-quarto.html">O Quarto</a></li>
+                        <li><a href="a-jornada.html">A Jornada</a></li>
+                        <li><a href="descubra-se.html">Descubra-se</a></li>
+                        <li><a href="conexao.html">Conexão</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4">
+                    <h5 class="footer-title mb-3">Conecte-se</h5>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="footer-divider my-4">
+            
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="footer-copyright mb-0">
+                        &copy; 2025 Filhos do Quarto. Todos os direitos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
+    <script src="contact.js"></script>
+</body>
+</html>
