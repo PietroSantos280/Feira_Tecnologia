@@ -1,6 +1,27 @@
 /* ===================================
    Global Styles & Variables
    =================================== */
+/* Correção para transbordamento horizontal em telas pequenas */
+html,
+body {
+  overflow-x: hidden; /* Impede a rolagem horizontal */
+}
+
+/* Garante que imagens e outros elementos de mídia não transbordem */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Para elementos que usam o grid do Bootstrap ou outros sistemas de layout */
+.container,
+.container-fluid,
+.row {
+  overflow-x: hidden; /* Garante que o conteúdo dentro deles não force a rolagem */
+}
 
 
 
