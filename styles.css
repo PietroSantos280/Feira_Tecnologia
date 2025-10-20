@@ -2,6 +2,8 @@
    Global Styles & Variables
    =================================== */
 /* Correção para transbordamento horizontal em telas pequenas */
+
+
 html,
 body {
   overflow-x: hidden; /* Impede a rolagem horizontal */
@@ -929,6 +931,7 @@ figcaption {
    =================================== */
 
 @media (max-width: 991px) {
+  
   .hero-title {
     font-size: 2.75rem; /* Ajustado */
   }
