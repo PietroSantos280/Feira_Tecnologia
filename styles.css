@@ -2,6 +2,12 @@
    Global Styles & Variables
    =================================== */
 
+
+
+  p{
+    text-align: justify;
+  }
+
 :root {
   /* Simplificando paleta para tons de azul apenas */
   --color-primary: #1e3a8a;

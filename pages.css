@@ -1,6 +1,22 @@
 /* ===================================
    Additional Styles for Inner Pages
    =================================== */
+
+   .row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+    justify-content: center;
+  }
+
+  .row>* {
+    margin-top: 20px;
+}
+
 .texto-com-link-longo {
   overflow-wrap: break-word;
   word-break: break-all; /* Força a quebra em qualquer ponto */
@@ -23,6 +39,7 @@
   color: var(--color-text-secondary);
   line-height: 1.8; /* Mais espaçamento */
   font-family: var(--font-accent); /* Fonte alternativa */
+  text-align: center;
 }
 
 /* Story Card */
@@ -184,6 +201,7 @@
   color: var(--color-primary);
   font-weight: 600;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .team-bio {
