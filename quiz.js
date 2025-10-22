@@ -96,10 +96,10 @@ const quizQuestions = [
 const quizResults = {
   despertar: {
     title: "O Despertar",
-    character: "Ana - A Buscadora",
+    character: "Alice - A Buscadora",
     icon: "sunrise",
     description:
-      "Você está no início de uma jornada extraordinária. Como Ana, você começou a perceber que há muito mais em você do que sempre acreditou. Este é o momento do questionamento, da curiosidade e da abertura para o desconhecido. Você está tocando a maçaneta da porta do quarto pela primeira vez.",
+      "Você está no início de uma jornada extraordinária. Como Alice, você começou a perceber que há muito mais em você do que sempre acreditou. Este é o momento do questionamento, da curiosidade e da abertura para o desconhecido. Você está tocando a maçaneta da porta do quarto pela primeira vez.",
     deepInsight:
       "O despertar não é um evento único, mas um convite contínuo. Cada pergunta que você faz a si mesmo é uma semente plantada no solo fértil da consciência. Não tenha pressa — a jornada é tão importante quanto o destino.",
     advice:
@@ -113,10 +113,10 @@ const quizResults = {
   },
   confronto: {
     title: "O Confronto",
-    character: "Bruno - O Conflituoso",
+    character: "Pedro - O Conflituoso",
     icon: "lightning",
     description:
-      "Você está na fase mais desafiadora e corajosa da jornada. Como Bruno, você reconhece suas contradições internas e está enfrentando aspectos de si mesmo que antes evitava. Esta tensão é sinal de crescimento profundo. Você está dentro do quarto, olhando para os espelhos que refletem suas verdades mais difíceis.",
+      "Você está na fase mais desafiadora e corajosa da jornada. Como Pedro, você reconhece suas contradições internas e está enfrentando aspectos de si mesmo que antes evitava. Esta tensão é sinal de crescimento profundo. Você está dentro do quarto, olhando para os espelhos que refletem suas verdades mais difíceis.",
     deepInsight:
       "O confronto é onde a transformação real acontece. É desconfortável porque você está desmantelando versões antigas de si mesmo para dar espaço ao novo. A dor que você sente não é de destruição, mas de renascimento.",
     advice:
@@ -130,10 +130,10 @@ const quizResults = {
   },
   integracao: {
     title: "A Integração",
-    character: "Clara - A Contemplativa",
+    character: "Tereza - A Contemplativa",
     icon: "puzzle",
     description:
-      "Você está em um momento de profunda sabedoria. Como Clara, você compreende que todas as partes de você — luz e sombra — formam um todo integrado. Está aprendendo a transformar suas feridas em força e suas fraquezas em sabedoria. O quarto agora é um espaço de contemplação e integração.",
+      "Você está em um momento de profunda sabedoria. Como Tereza, você compreende que todas as partes de você — luz e sombra — formam um todo integrado. Está aprendendo a transformar suas feridas em força e suas fraquezas em sabedoria. O quarto agora é um espaço de contemplação e integração.",
     deepInsight:
       "A integração é a arte de abraçar todas as suas partes sem julgamento. Você percebe que não precisa ser perfeito para ser completo. Cada experiência, cada erro, cada vitória — tudo contribui para a obra-prima que você está se tornando.",
     advice:
@@ -147,10 +147,10 @@ const quizResults = {
   },
   renascimento: {
     title: "O Renascimento",
-    character: "Daniel - O Transformado",
+    character: "Alice - O Transformado",
     icon: "stars",
     description:
-      "Você alcançou um nível profundo de autoconhecimento e autenticidade. Como Daniel, você compreende que o quarto nunca foi uma prisão, mas um espaço sagrado de transformação. Vive alinhado com sua essência e inspira outros em suas jornadas. A porta está aberta — você pode entrar e sair livremente.",
+      "Você alcançou um nível profundo de autoconhecimento e autenticidade. Como Alice, você compreende que o quarto nunca foi uma prisão, mas um espaço sagrado de transformação. Vive alinhado com sua essência e inspira outros em suas jornadas. A porta está aberta — você pode entrar e sair livremente.",
     deepInsight:
       "O renascimento não é o fim da jornada, mas o início de uma nova espiral de crescimento. Você descobriu que a liberdade não está em escapar de si mesmo, mas em se tornar plenamente quem você é. Agora você é o guardião do seu próprio quarto.",
     advice:
@@ -366,10 +366,6 @@ function showResults() {
         <a href="a-jornada.html" class="btn btn-primary">
           <i class="bi bi-book me-2"></i>
           Explorar Jornada
-        </a>
-        <a href="conexao.html" class="btn btn-primary">
-          <i class="bi bi-share me-2"></i>
-          Compartilhar
         </a>
       </div>
     </div>
