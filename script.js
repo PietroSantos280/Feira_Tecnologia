@@ -450,7 +450,6 @@ try {
     }
 })();
 
-
 // Garantir que não exista preventDefault em touchmove que bloqueie o scroll
 (function () {
     // remover listener que possa ter sido adicionado por bibliotecas/experimentos
@@ -476,5 +475,158 @@ try {
         });
     }
 })();
-  
+
+/* ======= Timer do quebra-cabeça (com debug e force stop) ======= */
+window._puzzleIntervals = window._puzzleIntervals || [];
+
+let _puzzleTimerId = null;
+let _puzzleStartAt = null;
+let _puzzleElapsed = 0;
+let _puzzleFinished = false;
+
+function _formatTime(totalSeconds) {
+    const mm = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const ss = String(totalSeconds % 60).padStart(2, '0');
+    return `${mm}:${ss}`;
+}
+
+function startPuzzleTimer() {
+    if (_puzzleFinished) {
+        console.log('[puzzle] não inicia: já finalizado');
+        return;
+    }
+    if (_puzzleTimerId) {
+        console.log('[puzzle] timer já rodando, id=', _puzzleTimerId);
+        return;
+    }
+    _puzzleStartAt = Date.now() - (_puzzleElapsed * 1000);
+    _puzzleTimerId = setInterval(() => {
+    // Se outro flag global indicar que o puzzle foi finalizado, encerra o interval defensivamente
+    if (window.__PUZZLE_FINISHED) {
+      try { clearInterval(_puzzleTimerId); } catch (e) {}
+      _puzzleTimerId = null;
+      _puzzleFinished = true;
+      return;
+    }
+
+    _puzzleElapsed = Math.floor((Date.now() - _puzzleStartAt) / 1000);
+    const el = document.querySelector('.puzzle-timer-display');
+    if (el) el.textContent = _formatTime(_puzzleElapsed);
+    }, 250);
+    window._puzzleIntervals.push(_puzzleTimerId);
+    console.log('[puzzle] timer iniciado, id=', _puzzleTimerId);
+}
+
+function stopPuzzleTimer() {
+  // Primeiro, garantir que qualquer interval registrado seja limpo (defensivo)
+  try {
+    forceStopAllPuzzleIntervals();
+  } catch (e) {
+    console.warn('[puzzle] forceStopAllPuzzleIntervals falhou', e);
+  }
+
+  if (!_puzzleTimerId) {
+    console.log('[puzzle] stop chamado, mas não havia timer ativo');
+  } else {
+    try { clearInterval(_puzzleTimerId); } catch (e) {}
+    console.log('[puzzle] timer limpo, id=', _puzzleTimerId);
+    // remover id do array se ainda existir
+    const idx = window._puzzleIntervals.indexOf(_puzzleTimerId);
+    if (idx !== -1) window._puzzleIntervals.splice(idx, 1);
+    _puzzleTimerId = null;
+  }
+
+  // Atualiza estado/tempo final
+  _puzzleElapsed = _puzzleStartAt ? Math.floor((Date.now() - _puzzleStartAt) / 1000) : _puzzleElapsed;
+  _puzzleFinished = true;
+  const el = document.querySelector('.puzzle-timer-display');
+  if (el) el.textContent = _formatTime(_puzzleElapsed);
+  console.log('[puzzle] tempo final (s)=', _puzzleElapsed, 'formato=', _formatTime(_puzzleElapsed));
+}
+
+function resetPuzzleTimer() {
+    // limpa timers criados pelo jogo (force)
+    forceStopAllPuzzleIntervals();
+    _puzzleTimerId = null;
+    _puzzleStartAt = null;
+    _puzzleElapsed = 0;
+    _puzzleFinished = false;
+    const el = document.querySelector('.puzzle-timer-display');
+    if (el) el.textContent = _formatTime(0);
+    console.log('[puzzle] timer resetado');
+}
+
+function forceStopAllPuzzleIntervals() {
+    // limpa qualquer interval registrado para ter certeza que nenhum está rodando
+    if (window._puzzleIntervals && window._puzzleIntervals.length) {
+        window._puzzleIntervals.forEach(id => {
+            try { clearInterval(id); } catch (e) {}
+        });
+        console.log('[puzzle] forceStop: limpei intervalos:', window._puzzleIntervals);
+        window._puzzleIntervals = [];
+    } else {
+        console.log('[puzzle] forceStop: nada para limpar');
+    }
+}
+
+/* Chamadas públicas */
+window.startPuzzleGame = function () {
+    resetPuzzleTimer();
+    startPuzzleTimer();
+    // outras inicializações do jogo...
+};
+
+window.onPuzzleCompleted = function () {
+    if (_puzzleFinished) {
+        console.log('[puzzle] já finalizado - onPuzzleCompleted chamado novamente');
+        return;
+    }
+    console.log('[puzzle] onPuzzleCompleted chamado');
+    stopPuzzleTimer();
+    const tempo = _formatTime(_puzzleElapsed);
+
+    const alertEl = document.querySelector('.puzzle-completion-alert') 
+                    || document.querySelector('.alert-success') 
+                    || document.getElementById('completionMessage');
+
+    if (alertEl) {
+        alertEl.classList.remove('d-none');
+        alertEl.textContent = `🎉 Parabéns! Você completou em ${tempo}`;
+    } else {
+        alert(`Parabéns! Você completou em ${tempo}`);
+    }
+
+    document.dispatchEvent(new CustomEvent('puzzleCompleted', { detail: { seconds: _puzzleElapsed } }));
+};
+
+/* Se o seu código não puder chamar onPuzzleCompleted diretamente, adiciono um observer
+   que detecta uma .alert-success sendo inserida contendo "Parabéns" e atualiza o tempo. */
+(function observeCompletionAlert() {
+    const container = document.body;
+    const mo = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+            for (const node of m.addedNodes) {
+                if (!(node instanceof HTMLElement)) continue;
+                const alert = node.matches && node.matches('.alert-success') ? node : node.querySelector && node.querySelector('.alert-success');
+                if (alert && /parab/i.test(alert.textContent || '')) {
+                    // se alerta aparecer com 00:00, atualiza para tempo real
+                    if (!_puzzleFinished) {
+                        // ainda não finalizado no timer: parar timer e calcular
+                        stopPuzzleTimer();
+                    }
+                    const tempo = _formatTime(_puzzleElapsed);
+                    alert.textContent = `🎉 Parabéns! Você completou em ${tempo}`;
+                    mo.disconnect();
+                    return;
+                }
+            }
+        }
+    });
+    mo.observe(container, { childList: true, subtree: true });
+})();
+
+/* Também permita que outros scripts escutem o evento 'puzzleCompleted' */
+// Exemplo de uso:
+// document.addEventListener('puzzleCompleted', (e) => console.log('tempo (s):', e.detail.seconds));
+
 console.log("[v0] Filhos do Quarto - Website initialized successfully")

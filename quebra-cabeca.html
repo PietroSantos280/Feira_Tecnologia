@@ -423,6 +423,8 @@
             }
 
             function update() {
+                // Se o puzzle já foi finalizado, não atualizamos mais o stopwatch
+                if (window.__PUZZLE_FINISHED) return;
                 seconds++;
                 if (display) display.textContent = formatTime(seconds);
             }
@@ -439,6 +441,20 @@
                 }
             }
 
+            // Para o stopwatch preservando o tempo exibido (não zera)
+            function stopStopwatch() {
+                if (interval) {
+                    clearInterval(interval);
+                    interval = null;
+                }
+                // marcar flag global para evitar incrementos por segurança
+                try { window.__PUZZLE_FINISHED = true; } catch (e) {}
+                if (startBtn) {
+                    startBtn.disabled = true;
+                    startBtn.textContent = 'Concluído';
+                }
+            }
+
             function resetStopwatch() {
                 if (interval) {
                     clearInterval(interval);
@@ -450,14 +466,18 @@
                     startBtn.disabled = false;
                     startBtn.textContent = 'Iniciar Tempo';
                 }
+                // permitir atualizações novamente ao resetar
+                try { window.__PUZZLE_FINISHED = false; } catch (e) {}
             }
 
             if (startBtn) {
                 startBtn.addEventListener('click', startStopwatch);
             }
 
-            // expõe função de reset para uso externo (se necessário)
+            // expõe funções para uso externo
             window.resetStopwatch = resetStopwatch;
+            window.stopStopwatch = stopStopwatch;
+            window.getStopwatchSeconds = function () { return seconds; };
 
             // também liga o botão 'Novo Jogo' para zerar o stopwatch quando o jogo reiniciar
             const novoBtn = document.querySelector("button[onclick='resetGame()']");
@@ -590,10 +610,35 @@
             if (isComplete && !gameState.isComplete) {
                 gameState.isComplete = true;
                 gameState.isTimerRunning = false;
-                const timeUsed = TIMER_DURATION - gameState.timeRemaining;
-                const formattedTime = formatTime(timeUsed);
+                // Preferir o tempo do stopwatch (se disponível) pois o usuário pode estar usando o cronômetro
+                let formattedTime;
+                try {
+                    if (typeof window.getStopwatchSeconds === 'function') {
+                        const swSeconds = window.getStopwatchSeconds();
+                        // se o stopwatch foi iniciado, use-o
+                        if (swSeconds && swSeconds > 0) {
+                            formattedTime = formatTime(swSeconds);
+                        }
+                    }
+                } catch (e) { console.warn('erro ao obter tempo do stopwatch', e); }
+                if (!formattedTime) {
+                    const timeUsed = TIMER_DURATION - gameState.timeRemaining;
+                    formattedTime = formatTime(timeUsed);
+                }
                 document.getElementById('statusText').textContent = `🎉 Parabéns! Você completou em ${formattedTime}!`;
                 document.getElementById('statusMessage').classList.add('show');
+                // Parar quaisquer timers relacionados imediatamente (defensivo):
+                try { if (gameState.timerInterval) { clearInterval(gameState.timerInterval); gameState.timerInterval = null; } } catch (e) { console.warn('falha ao limpar gameState.timerInterval', e); }
+                // Se o stopwatch simples estiver rodando na página, pare-o preservando o tempo exibido
+                try { if (typeof window.stopStopwatch === 'function') { window.stopStopwatch(); } } catch (e) { console.warn('falha ao parar stopwatch', e); }
+                // Opcional: desabilitar botão do stopwatch para indicar conclusão
+                try { const swBtn = document.getElementById('stopwatchStartBtn'); if (swBtn) { swBtn.disabled = true; swBtn.textContent = 'Concluído'; } } catch (e) {}
+                // Chamar limpadores globais do script principal (se existirem) para garantir que _puzzle timers também parem
+                try { if (typeof window.onPuzzleCompleted === 'function') { window.onPuzzleCompleted(); } } catch (e) { console.warn('falha ao chamar onPuzzleCompleted', e); }
+                try { if (typeof window.stopPuzzleTimer === 'function') { window.stopPuzzleTimer(); } } catch (e) {}
+                try { if (typeof window.forceStopAllPuzzleIntervals === 'function') { window.forceStopAllPuzzleIntervals(); } } catch (e) {}
+                // Sinal global para bloquear atualizações de timers na página
+                try { window.__PUZZLE_FINISHED = true; } catch (e) {}
             }
         }
 
@@ -604,6 +649,12 @@
             updateTimerDisplay();
 
             gameState.timerInterval = setInterval(() => {
+                // Se um flag global indicar que o puzzle terminou, pare o interval defensivamente
+                if (window.__PUZZLE_FINISHED) {
+                    try { clearInterval(gameState.timerInterval); gameState.timerInterval = null; } catch (e) {}
+                    return;
+                }
+
                 if (!gameState.isTimerRunning) {
                     clearInterval(gameState.timerInterval);
                     return;
@@ -651,13 +702,19 @@
         }
 
         function resetGame() {
+            // permitir updates novamente
+            try { window.__PUZZLE_FINISHED = false; } catch (e) {}
             document.getElementById('gameOverScreen').classList.remove('show');
             document.getElementById('statusMessage').classList.remove('show');
             gameState.isComplete = false;
             gameState.draggedPiece = null;
-            clearInterval(gameState.timerInterval);
+            try { if (gameState.timerInterval) { clearInterval(gameState.timerInterval); gameState.timerInterval = null; } } catch (e) {}
             initializePuzzleState();
             renderPuzzleGrid();
+            // Limpar stopwatch/ timers do script principal, se existirem
+            try { if (typeof window.resetStopwatch === 'function') { window.resetStopwatch(); } } catch (e) { console.warn('falha ao resetar stopwatch no resetGame', e); }
+            try { if (typeof window.resetPuzzleTimer === 'function') { window.resetPuzzleTimer(); } } catch (e) {}
+            // Reiniciar o timer do jogo (comportamento anterior)
             startTimer();
         }
 
