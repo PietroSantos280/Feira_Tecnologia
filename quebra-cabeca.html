@@ -46,9 +46,6 @@
                         <a class="nav-link" href="descubra-se.html">Descubra-se</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="conexao.html">Conexão</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="quebra-cabeca.html">Quebra-Cabeça</a>
                     </li>
                     <li class="nav-item ms-lg-3">
@@ -108,6 +105,12 @@
             font-family: 'Courier New', monospace;
             color: #1f2937;
             transition: color 0.3s ease;
+        }
+
+        /* margem para o cartão do cronômetro (stopwatch) */
+        .stopwatch-container {
+            margin-top: 18px;
+            margin-bottom: 18px;
         }
 
         .timer-value.warning {
@@ -314,15 +317,20 @@
             }
         }
     </style>
-</head>
-<body>
+
     <div class="container">
-        <div class="timer-container">
-            <div class="timer" id="timerDisplay">
-                <div class="timer-label">Tempo Restante</div>
-                <div class="timer-value" id="timerValue">5:00</div>
+        <!-- cronômetro regressivo removido; mantido apenas o cronômetro que inicia em 0 -->
+
+            <!-- Stopwatch simples (inicia em 0) -->
+            <div class="stopwatch-container text-center mb-4">
+                <div class="timer d-inline-block" id="stopwatchDisplay" style="min-width:140px;">
+                    <div class="timer-label">Tempo</div>
+                    <div class="timer-value" id="stopwatchValue">0:00</div>
+                </div>
+                <div class="mt-2">
+                    <button id="stopwatchStartBtn" class="btn-primary">Iniciar Tempo</button>
+                </div>
             </div>
-        </div>
 
         <div class="status-message" id="statusMessage">
             <p id="statusText">🎉 Parabéns! Você completou em 0:00!</p>
@@ -400,7 +408,66 @@
             </div>
         </div>
     </footer>
-        <script>
+    <script>
+        // Stopwatch simples: inicia em 0 e conta para cima
+        (function () {
+            const display = document.getElementById('stopwatchValue');
+            const startBtn = document.getElementById('stopwatchStartBtn');
+            let seconds = 0;
+            let interval = null;
+
+            function formatTime(s) {
+                const mins = Math.floor(s / 60);
+                const secs = s % 60;
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+
+            function update() {
+                seconds++;
+                if (display) display.textContent = formatTime(seconds);
+            }
+
+            function startStopwatch() {
+                if (interval) return; // já rodando
+                // reset para 0 antes de iniciar
+                seconds = 0;
+                if (display) display.textContent = formatTime(seconds);
+                interval = setInterval(update, 1000);
+                if (startBtn) {
+                    startBtn.disabled = true;
+                    startBtn.textContent = 'Em andamento';
+                }
+            }
+
+            function resetStopwatch() {
+                if (interval) {
+                    clearInterval(interval);
+                    interval = null;
+                }
+                seconds = 0;
+                if (display) display.textContent = formatTime(seconds);
+                if (startBtn) {
+                    startBtn.disabled = false;
+                    startBtn.textContent = 'Iniciar Tempo';
+                }
+            }
+
+            if (startBtn) {
+                startBtn.addEventListener('click', startStopwatch);
+            }
+
+            // expõe função de reset para uso externo (se necessário)
+            window.resetStopwatch = resetStopwatch;
+
+            // também liga o botão 'Novo Jogo' para zerar o stopwatch quando o jogo reiniciar
+            const novoBtn = document.querySelector("button[onclick='resetGame()']");
+            if (novoBtn) {
+                novoBtn.addEventListener('click', resetStopwatch);
+            }
+        })();
+
+        
+        
         const TIMER_DURATION = 300;
         const GRID_SIZE = 4;
         const PIECE_WIDTH = 200;

@@ -347,4 +347,134 @@ if (progressBars.length > 0) {
   })
 }
 
+// --- Garantir scroll no carregamento (remove bloqueios comuns) ---
+window.addEventListener('load', function () {
+    document.documentElement.style.overflow = 'auto';
+    document.body.style.overflow = 'auto';
+    document.body.classList.remove('modal-open');
+});
+
+// remover event listeners que podem ter sido adicionados sem passive:true
+try {
+    // Não há garantia que existam, mas tentamos limpar hooks comuns
+    document.removeEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+} catch (e) {
+    // noop
+}
+
+// --- Inicializa arrasto por Pointer API para elementos do quebra-cabeça ---
+(function initPuzzleTouchDrag() {
+    const container = document.querySelector('.puzzle-container');
+    if (!container) return;
+
+    let activePiece = null;
+    let startX = 0, startY = 0;
+    let pieceStartLeft = 0, pieceStartTop = 0;
+
+    function onPointerDown(e) {
+        // aceitar apenas botões primários / toques
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+        activePiece = e.currentTarget;
+        // marcar container para desabilitar o scroll durante o drag
+        container.classList.add('dragging');
+
+        // capturar ponteiro para receber move/up mesmo fora do elemento
+        activePiece.setPointerCapture(e.pointerId);
+
+        const rect = activePiece.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        // posição atual da peça (assumindo left/top em px)
+        pieceStartLeft = parseFloat(activePiece.style.left || rect.left + window.scrollX);
+        pieceStartTop = parseFloat(activePiece.style.top || rect.top + window.scrollY);
+
+        // prevenir seleção nativa
+        e.preventDefault();
+    }
+
+    function onPointerMove(e) {
+        if (!activePiece) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        // mover a peça (atualize conforme sua lógica de posicionamento)
+        activePiece.style.left = (pieceStartLeft + dx) + 'px';
+        activePiece.style.top  = (pieceStartTop + dy) + 'px';
+    }
+
+    function onPointerUp(e) {
+        if (!activePiece) return;
+        try { activePiece.releasePointerCapture(e.pointerId); } catch (err) {}
+        // remover estado dragging para reativar scroll
+        container.classList.remove('dragging');
+        activePiece = null;
+
+        // aqui você pode disparar a validação de encaixe da peça, etc.
+    }
+
+    // conectar os listeners a todas as peças (classe .puzzle-piece)
+    const pieces = container.querySelectorAll('.puzzle-piece');
+    pieces.forEach(piece => {
+        piece.style.touchAction = 'none'; // garantir que o elemento receba pointer events
+        piece.addEventListener('pointerdown', onPointerDown);
+        piece.addEventListener('pointermove', onPointerMove);
+        piece.addEventListener('pointerup', onPointerUp);
+        piece.addEventListener('pointercancel', onPointerUp);
+    });
+
+    // Fallback para navegadores antigos: mapear touch -> pointer-like
+    // (não sobrescreve se PointerEvents já existirem)
+    if (!window.PointerEvent) {
+        pieces.forEach(piece => {
+            piece.addEventListener('touchstart', function (ev) {
+                const touch = ev.changedTouches[0];
+                ev.clientX = touch.clientX;
+                ev.clientY = touch.clientY;
+                onPointerDown(ev);
+            }, { passive: false });
+
+            piece.addEventListener('touchmove', function (ev) {
+                const touch = ev.changedTouches[0];
+                ev.clientX = touch.clientX;
+                ev.clientY = touch.clientY;
+                onPointerMove(ev);
+            }, { passive: false });
+
+            piece.addEventListener('touchend', function (ev) {
+                const touch = ev.changedTouches[0] || ev;
+                ev.clientX = touch ? touch.clientX : 0;
+                ev.clientY = touch ? touch.clientY : 0;
+                onPointerUp(ev);
+            });
+        });
+    }
+})();
+
+
+// Garantir que não exista preventDefault em touchmove que bloqueie o scroll
+(function () {
+    // remover listener que possa ter sido adicionado por bibliotecas/experimentos
+    document.removeEventListener('touchmove', preventDefault, { passive: false });
+    function preventDefault(e) { e.preventDefault(); }
+
+    // Forçar overflow auto no load (algumas libs adicionam classe modal-open)
+    window.addEventListener('load', function () {
+        document.documentElement.style.overflow = 'auto';
+        document.body.style.overflow = 'auto';
+        document.body.classList.remove('modal-open');
+    });
+
+    // garantir que collapse do navbar não bloqueie scroll
+    var navbarCollapse = document.querySelector('.navbar-collapse');
+    if (navbarCollapse) {
+        navbarCollapse.addEventListener('hidden.bs.collapse', function () {
+            document.body.style.overflow = 'auto';
+        });
+        navbarCollapse.addEventListener('shown.bs.collapse', function () {
+            // permitir scroll do conteúdo quando o menu estiver aberto
+            document.body.style.overflow = 'auto';
+        });
+    }
+})();
+  
 console.log("[v0] Filhos do Quarto - Website initialized successfully")

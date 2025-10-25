@@ -22,7 +22,8 @@ function initGame() {
         generateMetadata();
         initializePuzzleState();
         renderPuzzleGrid();
-        startTimer();
+        updateTimerDisplay(); // mostra tempo inicial
+        prepareControls();    // liga botões sem iniciar nada
     } catch (error) {
         console.error('Erro ao inicializar o jogo:', error);
     }
@@ -143,6 +144,9 @@ function checkCompletion() {
 
 // Iniciar timer
 function startTimer() {
+    const startBtn = document.getElementById('startTimerBtn');
+    if (startBtn) startBtn.disabled = true;
+
     gameState.isTimerRunning = true;
     gameState.timerExpired = false;
     gameState.timeRemaining = TIMER_DURATION;
@@ -162,6 +166,7 @@ function startTimer() {
             gameState.timerExpired = true;
             clearInterval(gameState.timerInterval);
             showGameOver();
+            // Leave start button disabled until reset
         }
 
         updateTimerDisplay();
@@ -200,15 +205,77 @@ function showGameOver() {
 
 // Resetar jogo
 function resetGame() {
+    const startBtn = document.getElementById('startTimerBtn');
+    if (startBtn) startBtn.disabled = false;
+
     document.getElementById('gameOverScreen').classList.remove('show');
     document.getElementById('statusMessage').classList.remove('show');
     gameState.isComplete = false;
     gameState.draggedPiece = null;
     clearInterval(gameState.timerInterval);
+    gameState.isTimerRunning = false;
+    gameState.timerExpired = false;
+    gameState.timeRemaining = TIMER_DURATION;
     initializePuzzleState();
     renderPuzzleGrid();
-    startTimer();
+    updateTimerDisplay();
 }
 
-// Iniciar jogo quando página carregar
+// Handler para o botão Iniciar Tempo
+function handleStartClick() {
+    if (!gameState.isTimerRunning && !gameState.timerExpired && !gameState.isComplete) {
+        startTimer();
+    }
+}
+
+// Novo: busca controles e prepara início sem iniciar automaticamente
+function prepareControls() {
+    // botões compatíveis (compatibilidade com nomes anteriores)
+    const startBtn = document.getElementById('startTimerBtn') || document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const minutesInput = document.getElementById('timerMinutesInput');
+
+    // se houver configuração global, usa como valor inicial
+    if (minutesInput && window.PUZZLE_CONFIG && window.PUZZLE_CONFIG.TIMER_DURATION) {
+        const defaultMin = Math.round(window.PUZZLE_CONFIG.TIMER_DURATION / 60);
+        minutesInput.value = minutesInput.value || defaultMin;
+    }
+
+    if (startBtn) {
+        startBtn.addEventListener('click', function () {
+            // não deixa iniciar várias vezes
+            if (gameState.isTimerRunning) return;
+            // ler tempo do input (minutos) e atualizar gameState.timeRemaining
+            if (minutesInput) {
+                const mins = parseInt(minutesInput.value, 10);
+                if (!isNaN(mins) && mins > 0) {
+                    gameState.timeRemaining = mins * 60;
+                }
+            } else if (window.PUZZLE_CONFIG && window.PUZZLE_CONFIG.TIMER_DURATION) {
+                gameState.timeRemaining = window.PUZZLE_CONFIG.TIMER_DURATION;
+            } else {
+                gameState.timeRemaining = TIMER_DURATION;
+            }
+            updateTimerDisplay();
+            startTimer();
+            // atualiza label do botão
+            startBtn.textContent = 'Timer em execução';
+            startBtn.disabled = true;
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            resetGame();
+            // reabilita botão de iniciar
+            if (startBtn) {
+                startBtn.textContent = 'Iniciar Tempo';
+                startBtn.disabled = false;
+            }
+        });
+    }
+}
+
+// Substitui listener anterior por chamada a initGame que não inicia timer
+window.removeEventListener && window.removeEventListener('DOMContentLoaded', initGame);
 window.addEventListener('DOMContentLoaded', initGame);

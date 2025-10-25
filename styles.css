@@ -1060,3 +1060,291 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* Evitar overflow horizontal quando AOS aplica transform/animation */
+[data-aos].aos-animate,
+.aos-animate {
+  overflow-x: hidden !important;
+}
+
+/* Protege wrappers comuns que podem receber animação */
+.puzzle-wrapper,
+.puzzle-grid,
+.puzzle-cell,
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ======= FIX GLOBAL PARA OVERFLOW HORIZONTAL (APLICAR NO FINAL DO ARQUIVO) ======= */
+/* Força a viewport máxima e esconde qualquer overflow horizontal persistente */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  position: relative;
+}
+
+/* Garante que filhos diretos não ultrapassem a viewport (evita 100vw + scrollbars) */
+body > * {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Ocultar a barra de rolagem visual em todas as páginas (mantém a rolagem
+   funcionando, apenas remove a UI da barra). Compatível com WebKit, Firefox
+   e IE/Edge legados.
+   Se preferir restaurar a barra, remova este bloco.
+   -------------------------------------------------------------------------- */
+/* Desabilita rolagem em toda a página (remove scroll vertical e horizontal)
+   Se precisar permitir rolagem interna em áreas específicas, podemos adicionar
+   overflow:auto nesses containers. */
+html, body {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+/* Protege containers e sections que podem receber animações/transforms */
+.container,
+.container-fluid,
+.row,
+header,
+section,
+footer,
+.main-content,
+.navbar,
+.hero-section,
+.page-header {
+  overflow-x: hidden;
+  position: relative;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Imagens/mídia */
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Reduz artefatos quando AOS (ou outras animações) aplica transforms */
+[data-aos],
+[data-aos] * {
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Pseudo-elementos às vezes causam overflow (ex.: outline gradientes) */
+*::before,
+*::after {
+  box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Classes "full-bleed" ou pseudo elementos com posicionamento absoluto */
+.full-bleed,
+.hero-section::before,
+.quote-card::before,
+.header-graphic,
+.footer-graphic {
+  left: 0;
+  right: 0;
+  max-width: 100vw;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* regra de segurança: evita que transform translateX excessivo mostre barra */
+html, body {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+/* Se ainda persistir, inspeccione no DevTools qual elemento ultrapassa 100vw —
+   geralmente é imagem com width fixa, elemento com margin negativa ou elemento com width:100vw combinado com scrollbar. */
+
+/* ========== OVERRIDES GLOBAIS PARA REDUZIR TAMANHOS ========== */
+/* Ajuste base para toda a página */
+body {
+  font-size: 16px !important; /* reduzido de 18px */
+  line-height: 1.6 !important;
+}
+
+/* Navbar / brand */
+.navbar-brand {
+  font-size: 1.25rem !important;
+}
+.brand-icon {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 1rem !important;
+}
+
+/* Hero - títulos e ícones */
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem) !important; /* menor e mais controlado */
+}
+.hero-subtitle {
+  font-size: 1rem !important;
+}
+.hero-icon {
+  width: 48px !important;
+  height: 48px !important;
+  font-size: 1.25rem !important;
+}
+
+/* Section / page titles */
+.section-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem) !important;
+}
+
+/* Feature cards and icons */
+.feature-card {
+  padding: 1.25rem !important; /* menos espaço interno */
+}
+.feature-icon {
+  width: 64px !important;
+  height: 64px !important;
+  font-size: 1.4rem !important;
+}
+.feature-title {
+  font-size: 1.25rem !important;
+}
+
+/* Quote card smaller */
+.quote-card {
+  padding: 1.25rem !important;
+}
+.quote-text {
+  font-size: 1.1rem !important;
+}
+
+/* Buttons: menos padding e tamanho de fonte menor */
+.btn {
+  padding: 0.5rem 1.25rem !important;
+  font-size: 0.95rem !important;
+}
+.btn-lg {
+  padding: 0.6rem 1.5rem !important;
+  font-size: 1rem !important;
+}
+
+/* Footer */
+.footer-brand {
+  font-size: 1.25rem !important;
+}
+.footer-text {
+  font-size: 0.95rem !important;
+}
+
+/* Imagens - limitar capas grandes e avatares */
+.capa {
+  max-width: 60% !important; /* sobrescreve inline style de 80% */
+  height: auto !important;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+figure img,
+img.img-fluid {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Equipe / avatares: reduzir e padronizar */
+.team-avatar img {
+  width: 120px !important;
+  height: 120px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  display: block;
+  margin: 0 auto 1rem auto;
+}
+
+/* Cards gerais e containers: menos padding em telas grandes */
+.stage-card,
+.story-card,
+.character-card,
+.symbol-card,
+.team-card {
+  padding: 1.25rem !important;
+}
+
+/* Timeline / bloco de citação */
+.feature-description,
+.stage-description,
+.story-card p,
+.team-bio {
+  font-size: 0.98rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Ajustes responsivos adicionais */
+@media (max-width: 992px) {
+  .capa { max-width: 70% !important; }
+  .hero-title { font-size: clamp(1.6rem, 6vw, 2.2rem) !important; }
+  .brand-icon { width: 34px !important; height: 34px !important; }
+  .feature-icon { width: 56px !important; height: 56px !important; }
+  .team-avatar img { width: 96px !important; height: 96px !important; }
+}
+
+@media (max-width: 576px) {
+  .capa { max-width: 90% !important; }
+  .hero-title { font-size: 1.6rem !important; }
+  .navbar-brand { font-size: 1rem !important; }
+  .btn { width: auto !important; }
+}
+
+/* Se quiser reduzir ainda mais, diminua font-size do body para 15px.
+   Se alguns elementos continuarem grandes, envie print do DevTools com
+   o elemento selecionado que eu adiciono regra específica. */
+
+/* Forçar scroll no mobile e ativar inércia no iOS */
+html, body {
+    height: auto !important;
+    min-height: 100%;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+}
+
+/* Seções que usam 100vh podem bloquear scroll em alguns navegadores móveis */
+section, .page-header, .symbol-section, .quote-section {
+    min-height: auto;
+}
+
+/* Regras para o quebra-cabeça:
+   - container sem touch-action quando ativo para permitir drag sem scroll
+   - quando não estiver arrastando, permitir scroll normalmente */
+.puzzle-container {
+    touch-action: auto; /* permite rolar por padrão */
+    -webkit-user-select: none;
+    user-select: none;
+    position: relative;
+}
+
+.puzzle-container.dragging {
+    touch-action: none; /* desabilita scroll enquanto arrasta peças */
+}
+
+/* Peças do quebra-cabeça (exemplo genérico) */
+.puzzle-piece {
+    touch-action: none; /* permite pointer events granularmente na peça */
+    -webkit-user-drag: none;
+    position: absolute; /* assumindo layout absoluto das peças */
+    cursor: grab;
+}
+.puzzle-piece:active {
+    cursor: grabbing;
+}
