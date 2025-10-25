@@ -1,4 +1,2 @@
 # Link do site
-
-https://pablosgomes.github.io/feira_tecnologica/
-
+https://pietrosantos280.github.io/Feira_Tecnologia/
